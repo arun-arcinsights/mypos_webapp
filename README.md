@@ -2,7 +2,7 @@
 
 # Clone the Repository
 
-git clone https://github.com/yourusername/mypos-marketplace.git
+git clone https://github.com/arun-arcinsights/mypos_webapp.git
 cd mypos-marketplace
 
 # Create and Activate Virtual Environment
