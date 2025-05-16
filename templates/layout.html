@@ -34,6 +34,11 @@
                 <a href="#" class="sidebar-item {% if request.endpoint.endswith('invoices') %}active{% endif %}">
                     <i class="bi bi-receipt"></i> <span>Invoices</span>
                 </a>
+                {% if current_user.role == 'merchant' %}
+                <a href="{{ url_for('sales_dashboard') }}" class="sidebar-item {% if request.endpoint == 'sales_dashboard' %}active{% endif %}">
+                    <i class="bi bi-graph-up"></i> <span>Sales Dashboard</span>
+                </a>
+                {% endif %}
             </div>
             
             <!-- User profile -->

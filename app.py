@@ -10,6 +10,8 @@ from config import Config
 import json
 import uuid
 from datetime import datetime, timedelta
+import random
+
 
 
 app = Flask(__name__)
@@ -350,6 +352,104 @@ def merchant_dashboard():
         recent_activities=recent_activities
     )
 
+@app.route('/merchant/sales_dashboard')
+@login_required
+def sales_dashboard():
+    if current_user.role != 'merchant':
+        return redirect(url_for('index'))
+    
+    # Simple mock data to ensure the template has what it needs
+    sales_data = {
+        "total_revenue": 117533,
+        "monthly_change": 0.8
+    }
+    
+    return render_template(
+        'merchant/sales_dashboard.html',
+        sales_data=sales_data,
+        current_month="May 2025"
+    )
+
+def generate_merchant_sales_data(merchant_id):
+    """Generate simulated sales data for the merchant dashboard"""
+    # This would normally come from your database
+    # For demo purposes, we're generating random data
+    
+    # Last 6 months of sales data
+    months = ["Dec '24", "Jan '25", "Feb '25", "Mar '25", "Apr '25", "May '25"]
+    
+    # Generate random monthly revenue
+    base_revenue = 15000  # Starting point
+    actual_revenue = []
+    for i in range(6):
+        # Add some variability to each month
+        variation = random.uniform(0.9, 1.3)
+        # Positive trend over time
+        trend_factor = 1 + (i * 0.05)
+        month_revenue = round(base_revenue * variation * trend_factor)
+        actual_revenue.append(month_revenue)
+    
+    # Generate projected revenue (slightly different from actual)
+    projected_revenue = [round(rev * random.uniform(0.9, 1.1)) for rev in actual_revenue]
+    
+    # Transaction counts
+    transactions = [round(rev / random.uniform(30, 50)) for rev in actual_revenue]
+    
+    # Average transaction values
+    avg_values = [round(actual_revenue[i] / transactions[i], 2) if transactions[i] > 0 else 0 for i in range(6)]
+    
+    # Month-over-month growth
+    growth = []
+    for i in range(1, 6):
+        if actual_revenue[i-1] > 0:
+            monthly_growth = ((actual_revenue[i] - actual_revenue[i-1]) / actual_revenue[i-1]) * 100
+            growth.append(round(monthly_growth, 1))
+        else:
+            growth.append(0)
+    growth.insert(0, 0)  # No growth for first month
+    
+    # Top performing products/services
+    top_products = [
+        {"name": "Website Design", "revenue": 8500, "growth": 12.3},
+        {"name": "Logo Design", "revenue": 6200, "growth": 5.7},
+        {"name": "SEO Services", "revenue": 4800, "growth": -2.1},
+        {"name": "Content Writing", "revenue": 3900, "growth": 8.5},
+        {"name": "Social Media", "revenue": 2600, "growth": 15.2}
+    ]
+    
+    return {
+        "months": months,
+        "actual_revenue": actual_revenue,
+        "projected_revenue": projected_revenue,
+        "transactions": transactions,
+        "avg_values": avg_values,
+        "growth": growth,
+        "top_products": top_products,
+        "total_revenue": sum(actual_revenue),
+        "avg_monthly_revenue": round(sum(actual_revenue) / len(actual_revenue)),
+        "total_transactions": sum(transactions),
+        "current_month_revenue": actual_revenue[-1],
+        "previous_month_revenue": actual_revenue[-2],
+        "monthly_change": round(((actual_revenue[-1] - actual_revenue[-2]) / actual_revenue[-2]) * 100, 1)
+    }
+
+@app.route('/api/sales/insight', methods=['POST'])
+@login_required
+def api_sales_insight():
+    if current_user.role != 'merchant':
+        return jsonify({'error': 'Unauthorized access'}), 403
+    
+    data = request.json
+    question = data.get('question', '')
+    
+    # Get the sales data (in a real app, this would come from your database)
+    sales_data = generate_merchant_sales_data(merchant_id=current_user.id)
+    
+    # Generate insight using OpenAI
+    answer = generate_sales_insight(question, sales_data)
+    
+    return jsonify({'answer': answer})
+
 @app.route('/consumer/quotations')
 @login_required
 def consumer_quotations():
@@ -471,7 +571,7 @@ def request_deposit(quotation_id):
             quotation.id,
             quotation.title,
             amount=form.amount.data,
-            currency='USD',
+            currency='GBP',
             customer_email=quotation.consumer.email
         )
         
