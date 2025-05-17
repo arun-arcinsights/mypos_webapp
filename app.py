@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, flash, request, jso
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from models import db, User, Quotation, Transaction
 from services.openai_service import generate_quotation
-from services.mypos_service import request_myposdeposit
+from services.mypos_service import request_myposdeposit, get_merchant_transaction_list, analyze_transactions
 from forms import LoginForm, RegistrationForm, QuotationForm, PaymentForm
 import os
 from datetime import datetime
@@ -352,15 +352,24 @@ def merchant_dashboard():
         recent_activities=recent_activities
     )
 
+
 @app.route('/merchant/sales_dashboard')
 @login_required
 def sales_dashboard():
     if current_user.role != 'merchant':
         return redirect(url_for('index'))
     
+    account_number,transaction_list=get_merchant_transaction_list()
+    insights = analyze_transactions(transaction_list)
+
+    total_transactions=insights["total_transactions"]
+    total_revenue=insights["total_revenue_eur"]
+    avergae_transactions=insights["average_transaction_eur"] 
     # Simple mock data to ensure the template has what it needs
     sales_data = {
-        "total_revenue": 117533,
+        "total_revenue": total_revenue,
+        "total_transactions":total_transactions,
+        "avergae_transactions":avergae_transactions,
         "monthly_change": 0.8
     }
     
@@ -571,7 +580,7 @@ def request_deposit(quotation_id):
             quotation.id,
             quotation.title,
             amount=form.amount.data,
-            currency='GBP',
+            currency='EUR',
             customer_email=quotation.consumer.email
         )
         
