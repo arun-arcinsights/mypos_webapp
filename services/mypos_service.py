@@ -2,7 +2,7 @@ import requests
 from flask import current_app
 import base64
 import uuid
-
+import json
 def generate_transaction_id():
     return uuid.uuid4().int >> 96 
 
@@ -158,8 +158,6 @@ def analyze_transactions(transactions):
     }
 
 
-
-
 def request_myposdeposit(quotation_id,title,amount, currency, customer_email):
     """
     Request a deposit payment via MyPOS TRANSACTION API
@@ -193,11 +191,13 @@ def request_myposdeposit(quotation_id,title,amount, currency, customer_email):
         "Content-Type": "application/json; x-api-version=1",
         "Accept": "application/json"
     }
-
+    '''
     response = requests.post(payment_url, data=json.dumps(payment_data), headers=headers)
-
+   
     if response.status_code == 200:
         response_json = response.json()
+        transaction_id=response_json.get("code")
+        success='success'
         url = response_json.get("payment_request_url")
         if url:
             return url
@@ -205,3 +205,27 @@ def request_myposdeposit(quotation_id,title,amount, currency, customer_email):
             raise ValueError("Payment URL not found in response.")
     else:
         raise ConnectionError(f"Failed to generate payment URL. Status code: {response.status_code}")
+    '''
+    try:
+        response = requests.post(payment_url, data=json.dumps(payment_data), headers=headers)
+
+        response_data = response.json()
+        
+        if response.status_code == 200:
+            return {
+                'success': True,
+                'payment_url': response_data.get('payment_request_url'),
+                'transaction_id':generate_transaction_id()
+            }
+        else:
+            current_app.logger.error(f"MyPOS API error: {response_data}")
+            return {
+                'success': False,
+                'error': response_data.get('message', 'Unknown error')
+            }
+    except Exception as e:
+        current_app.logger.error(f"MyPOS API request error: {str(e)}")
+        return {
+            'success': False,
+            'error': str(e)
+        }

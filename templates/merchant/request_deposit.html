@@ -26,7 +26,7 @@
                     </tr>
                     <tr>
                         <th>Revised Amount:</th>
-                        <td>${{ quotation.revised_amount }}</td>
+                        <td>€{{ quotation.revised_amount }}</td>
                     </tr>
                     <tr>
                         <th>Payment Terms:</th>
@@ -71,7 +71,7 @@
                                     <input type="number" id="deposit-percent" class="form-control" value="30" min="1" max="100">
                                     <span class="input-group-text">%</span>
                                 </div>
-                                <div class="form-text">Percentage of the revised amount (${{ quotation.revised_amount }})</div>
+                                <div class="form-text">Percentage of the revised amount (€{{ quotation.revised_amount }})</div>
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                             <div class="mb-3">
                                 <label for="{{ form.amount.id }}" class="form-label">Deposit Amount to Request:</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text">€</span>
                                     {{ form.amount(class="form-control", id="deposit-amount") }}
                                 </div>
                                 {% if form.amount.errors %}
@@ -100,13 +100,13 @@
                             
                             <div class="alert alert-primary text-center mb-0">
                                 <div>
-                                    <span class="h6">Total Quote Amount:</span> <strong>${{ quotation.revised_amount }}</strong>
+                                    <span class="h6">Total Quote Amount:</span> <strong>€{{ quotation.revised_amount }}</strong>
                                 </div>
                                 <div class="h4 mt-2">
-                                    <span>Deposit Amount:</span> <strong id="deposit-display">$0.00</strong>
+                                    <span>Deposit Amount:</span> <strong id="deposit-display">€0.00</strong>
                                 </div>
                                 <div class="text-muted small">
-                                    Remaining Balance: ${{ '%.2f'|format(quotation.revised_amount) }}
+                                    Remaining Balance: €{{ '%.2f'|format(quotation.revised_amount) }}
                                 </div>
                             </div>
                         </div>

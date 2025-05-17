@@ -57,7 +57,7 @@
                     {% endfor %}
                 {% endfor %}
                 <h2 class="display-4 mb-1">{{ pending_payments|length }}</h2>
-                <p class="text-muted">Totaling ${{ total_amount.value }}</p>
+                <p class="text-muted">Totaling €{{ total_amount.value }}</p>
                 <div class="mt-3">
                     <a href="{{ url_for('merchant_dashboard') }}" class="text-success">View All</a>
                 </div>
@@ -166,7 +166,7 @@
                                 </td>
                                 <td>
                                     {% if quotation.revised_amount %}
-                                        ${{ quotation.revised_amount }}
+                                        €{{ quotation.revised_amount }}
                                     {% else %}
                                         --
                                     {% endif %}

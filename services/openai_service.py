@@ -77,10 +77,10 @@ def generate_quotation(product_type, description, budget=0):
     2. A precise tabular breakdown of services and costs in this format:
        | Service/Item | Description | Estimated Cost |
        | ------------ | ----------- | -------------- |
-       | [Service 1]  | [Brief description] | $X |
-       | [Service 2]  | [Brief description] | $X |
-       | [Service 3]  | [Brief description] | $X |
-       | Total        |               | $TOTAL |
+       | [Service 1]  | [Brief description] | €X |
+       | [Service 2]  | [Brief description] | €X |
+       | [Service 3]  | [Brief description] | €X |
+       | Total        |               | €TOTAL |
     
     3. A brief timeline for delivery (1-2 sentences)
     

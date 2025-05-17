@@ -520,11 +520,11 @@ def review_quotation(quotation_id):
             
             # Add each service row
             for service in services:
-                updated_content += f"| {service['name']} | {service['description']} | ${service['cost']:.2f} |\n"
+                updated_content += f"| {service['name']} | {service['description']} | €{service['cost']:.2f} |\n"
             
             # Add total row
             total = sum(service['cost'] for service in services)
-            updated_content += f"| **Total** | | **${total:.2f}** |\n\n"
+            updated_content += f"| **Total** | | **€{total:.2f}** |\n\n"
             
             # Add a closing note if one exists in the original content
             if "timeline" in quotation.ai_generated_content.lower():

@@ -21,4 +21,4 @@ class Quotation(db.Model):
     transactions = db.relationship('Transaction', backref='quotation', lazy=True)
     
     def __repr__(self):
-        return f"Quotation('{self.title}', '{self.status}', '${self.budget}')"
+        return f"Quotation('{self.title}', '{self.status}', '€{self.budget}')"

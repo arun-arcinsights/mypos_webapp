@@ -31,12 +31,12 @@ class QuotationForm(FlaskForm):
     title = StringField('Quotation Title', validators=[DataRequired(), Length(max=100)])
     product_type = StringField('Product/Service Type', validators=[DataRequired(), Length(max=50)])
     description = TextAreaField('Description', validators=[DataRequired()])
-    #budget = FloatField('Budget ($)', validators=[DataRequired()])
+    #budget = FloatField('Budget (€)', validators=[DataRequired()])
     #merchant_id = SelectField('Select Merchant', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Generate Quotation')
 
 class PaymentForm(FlaskForm):
-    amount = FloatField('Amount ($)', validators=[DataRequired()])
+    amount = FloatField('Amount (€)', validators=[DataRequired()])
     payment_terms = TextAreaField('Payment Terms')
     notes = TextAreaField('Notes')
     submit = SubmitField('Submit')

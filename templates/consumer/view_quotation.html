@@ -28,7 +28,7 @@
                     {% if quotation.revised_amount %}
                         <tr>
                             <th>Revised Amount:</th>
-                            <td>${{ quotation.revised_amount }}</td>
+                            <td>€{{ quotation.revised_amount }}</td>
                         </tr>
                     {% endif %}
                     <tr>
@@ -85,7 +85,7 @@
                         <p>{{ quotation.merchant.username }} has requested a deposit to proceed with this quotation.</p>
                         {% for transaction in quotation.transactions %}
                             {% if transaction.status == 'pending' %}
-                                <a href="{{ transaction.payment_url }}" class="btn btn-primary mt-2" target="_blank">Pay Deposit of ${{ transaction.amount }}</a>
+                                <a href="{{ transaction.payment_url }}" class="btn btn-primary mt-2" target="_blank">Pay Deposit of €{{ transaction.amount }}</a>
                             {% endif %}
                         {% endfor %}
                     </div>
@@ -167,7 +167,7 @@
                     {% for transaction in quotation.transactions %}
                         <tr>
                             <td>{{ transaction.transaction_id }}</td>
-                            <td>${{ transaction.amount }}</td>
+                            <td>€{{ transaction.amount }}</td>
                             <td>
                                 {% if transaction.status == 'pending' %}
                                     <span class="badge bg-warning">Pending</span>

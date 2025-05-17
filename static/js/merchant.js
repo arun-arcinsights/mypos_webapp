@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update visual display as well if it exists
             const depositDisplayElement = document.getElementById('deposit-display');
             if (depositDisplayElement) {
-                depositDisplayElement.textContent = `$${depositAmount}`;
+                depositDisplayElement.textContent = `€${depositAmount}`;
             }
         }
         
